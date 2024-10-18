@@ -8,8 +8,34 @@ import App from "./App";
 import Record from "./components/Record";
 import RecordList from "./components/RecordList";
 import "./index.css";
+import StudentList from "./components/teacherview/StudentList";
 
 const router = createBrowserRouter([
+  {
+    // homepage displaying questions
+    path: "/home/:id",
+    element: <App />,
+    children: [
+      {
+        path: "/home/:id",
+        //element: <QuestionList />,
+      },
+    ],
+  },
+  {
+    // profile page
+  },
+  {
+    // teacherview leaderboard
+    path: "/teacher",
+    element: <App />,
+    children: [
+      {
+        path: "/teacher",
+        element: <StudentList />,
+      },
+    ],
+  },
   {
     path: "/",
     element: <App />,

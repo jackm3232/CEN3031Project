@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import ViewStudentBoard from "./teacherview/ViewStudentBoard";
 
 export default function Navbar() {
   return (
@@ -12,6 +13,7 @@ export default function Navbar() {
           Create Employee
         </NavLink>
       </nav>
+      <ViewStudentBoard className="flex basis-1/2"/>,
     </div>
   );
 }
