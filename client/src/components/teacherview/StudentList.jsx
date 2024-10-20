@@ -18,6 +18,8 @@ const Student = (props) => (
 export default function StudentList() {
     const [students, setStudents] = useState([]);
 
+    console.log("here");
+
     // scrolling
     // https://buaiscia.github.io/blog/tips/handle-scroll-event-react
 
@@ -29,7 +31,7 @@ export default function StudentList() {
             // server/routes/record.js when in the /record directory, that's
             // why we fetch from /record but the express code in record.js
             // is just the root (/)
-            const response = await fetch(`http://localhost:3500/student/`);
+            const response = await fetch(`http://localhost:3500/`);
 
             if (!response.ok) {
                 const message = `An error occurred: ${response.statusText}`;
