@@ -10,7 +10,7 @@ export default function ViewStudentBoard() {
                 bg-gradient-to-b from-emerald-400 to-emerald-500
                 active:bg-gradient-to-b active:from-emerald-500 active:to-emerald-600
                 " to="/teacher">
-                    View Students
+                    Student View
                 </NavLink>
             </nav>
         </div>
