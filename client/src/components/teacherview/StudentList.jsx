@@ -4,8 +4,9 @@
 // view. 
 // 
 // Notes:
+//  - Student Key property needs to be the document id, not sure how to do that
 //  - Delete buttons doesn't do anything rn, that'll need to be implemented on 
-//    the backend
+//    the backend, also should be icon
 //  - The Student View button should let the teacher see the leaderboard from 
 //    the student's perspective, this'll also allow us to test it w/out having
 //    to login as a student.
@@ -15,7 +16,6 @@
 //------------------------------------------------------------------------------
 
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 
 const Student = (props) => (
   <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -42,38 +42,15 @@ const Student = (props) => (
   </tr>
 );
 
-/*
-const Student = (props) => (
-    <div className="flex flex-col rounded-lg bg-white shadow-md space-y-3 p-6 m-1 w-1/2">
-        <div className="text-2xl font-semibold text-black">
-            {props.student.name}
-        </div>
-        <div className="text-md font-small text-black text-justify">
-            {props.student.level}
-        </div>
-        <div className="text-sm text-black">
-            {props.student.birthday}
-        </div>
-    </div>
-);
-*/
-
 export default function StudentList() {
     const [students, setStudents] = useState([]);
-
-    console.log("here");
-
     // scrolling
     // https://buaiscia.github.io/blog/tips/handle-scroll-event-react
 
-    // fetch records from database
+    // fetch students from server
     // [note]: useEffect is used for external stuff like fetching
     useEffect(() => {
         async function getStudents() {
-            // [note]: in server/server.js express is told to use records from 
-            // server/routes/record.js when in the /record directory, that's
-            // why we fetch from /record but the express code in record.js
-            // is just the root (/)
             const response = await fetch(`http://localhost:3500/`);
 
             if (!response.ok) {
@@ -102,18 +79,7 @@ export default function StudentList() {
         });
     }
 
-    /*
-    // display students
-    return (
-        <>
-            <div className="flex overflow-visible space-y-10 items-center flex-col">
-                { studentList() }
-            </div>
-        </>
-    );
-    */
-
-    // display students
+  // display students
   return (
     <>
       <h3 className="text-lg font-semibold p-4">Student Leaderboard</h3>

@@ -1,16 +1,16 @@
 //------------------------------------------------------------------------------
-// Student View Button
-// Takes user to a screen to view leaderboard from student perspective
+// View Question Button
+// Takes user to a screen to view questions
 // 
 // Notes:
-//  - For temporary debugging, this button is on masthead and takes to /teacher
+//  - For temporary debugging, this button is on masthead and takes to /question
 //    directory
 //------------------------------------------------------------------------------
 
 
 import { NavLink } from "react-router-dom";
 
-export default function ViewStudentBoard() {
+export default function ViewQuestion() {
     return (
         <div>
             <nav className="justify-end mb-6">
@@ -19,8 +19,8 @@ export default function ViewStudentBoard() {
                 text-white font-sans font-semibold
                 bg-gradient-to-b from-emerald-400 to-emerald-500
                 active:bg-gradient-to-b active:from-emerald-500 active:to-emerald-600
-                " to="/teacher">
-                    Student View
+                " to="/question">
+                    View Question
                 </NavLink>
             </nav>
         </div>

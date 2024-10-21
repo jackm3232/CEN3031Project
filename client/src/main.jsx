@@ -9,6 +9,7 @@ import Record from "./components/Record";
 import RecordList from "./components/RecordList";
 import "./index.css";
 import StudentList from "./components/teacherview/StudentList";
+import QuestionView from "./components/teacherview/QuestionView";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,17 @@ const router = createBrowserRouter([
       {
         path: "/teacher",
         element: <StudentList />,
+      },
+    ],
+  },
+  {
+    // question view
+    path: "/question",
+    element: <App />,
+    children: [
+      {
+        path: "/question",
+        element: <QuestionView />,
       },
     ],
   },

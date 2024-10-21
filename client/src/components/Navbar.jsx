@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import ViewStudentBoard from "./teacherview/ViewStudentBoard";
+import ViewQuestionButton from "./teacherview/ViewQuestionButton";
 
 export default function Navbar() {
   return (
@@ -14,6 +15,7 @@ export default function Navbar() {
         </NavLink>
       </nav>
       <ViewStudentBoard className="flex basis-1/2"/>,
+      <ViewQuestionButton className="flex basis-1/2"/>
     </div>
   );
 }
