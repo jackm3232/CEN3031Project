@@ -15,10 +15,10 @@ export default function ViewQuestion() {
         <div>
             <nav className="justify-end mb-6">
                 <NavLink className="flex px-8 py-1 
-                rounded-md border-solid border border-emerald-500 
+                rounded-md border-solid border border-purple-500 
                 text-white font-sans font-semibold
-                bg-gradient-to-b from-emerald-400 to-emerald-500
-                active:bg-gradient-to-b active:from-emerald-500 active:to-emerald-600
+                bg-gradient-to-b from-purple-400 to-purple-500
+                active:bg-gradient-to-b active:from-purple-500 active:to-purple-600
                 " to="/question">
                     View Question
                 </NavLink>

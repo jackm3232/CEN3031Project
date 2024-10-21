@@ -77,7 +77,7 @@ export default function QuestionView() {
   // requests a question from math "api"
   async function requestQuestion() {
     // spec type of question
-    let questionType = { difficulty: difficulty.hundreds, operator: operator.addition };
+    let questionType = { difficulty: difficulty.tens, operator: operator.multiplication };
     // generate question with type
     const newQuestion = await generateQuestion(questionType); 
 
