@@ -18,6 +18,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <RecordList />,
       },
+      {
+        path: "/create-account",
+        element: <CreateAccount />,
+       },
     ],
   },
   {

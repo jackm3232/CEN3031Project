@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "CEN3031Project"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "CEN3031Project-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
