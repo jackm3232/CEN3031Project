@@ -88,7 +88,7 @@ app.get('/get-class-members/:classId/:type', async (req, res) => {
   }
 });
 
-// Get a specific student's or teacher's profile
+// Get a specific student or teacher's profile (classId can be any class they are in)
 app.get('/get-user-info/:classId/:type/:userId', async (req, res) => {
   try {
     const { classId, type, userId } = req.params;
@@ -195,7 +195,7 @@ app.put('/update-user/:classId/:type/:userId', async (req, res) => {
 });
 
 // Add a student or teacher to another class (give class to be added to and one they are already in)
-app.put('/add-class/:newClassId/:existingClassId/:type/:userId', async (req, res) => {
+app.put('/add-to-class/:newClassId/:existingClassId/:type/:userId', async (req, res) => {
   try {
     const { newClassId, existingClassId, type, userId } = req.params;
 
@@ -250,6 +250,115 @@ app.put('/add-class/:newClassId/:existingClassId/:type/:userId', async (req, res
   }
 });
 
+// Remove a student or teacher from a specific class, update their classIds lists in other classes
+app.put('/remove-from-class/:classId/:type/:userId', async (req, res) => {
+  try {
+    const { classId, type, userId } = req.params;
+
+    // Ensure type is either 'students' or 'teachers'
+    if (type !== 'students' && type !== 'teachers') {
+      return res.status(400).send('Invalid type. Must be "students" or "teachers".');
+    }
+
+    // Get the student/teacher's document in the class they will be removed from
+    const userRef = db.collection('classes').doc(classId).collection(type).doc(userId);
+    const userDoc = await userRef.get();
+
+    // Make sure the user exists in the specified class
+    if (!userDoc.exists) {
+      return res.status(404).send(`${type.slice(0, -1)} not found in the specified class`);
+    }
+
+    // Get the student/teacher's data to access the classIds list
+    const userData = userDoc.data();
+    const classIds = userData.classIds || [];
+
+    // Remove the classId in which the student/teacher is getting removed from their classIds lists in other classes
+    const updatePromises = [];
+    for (const otherClassId of classIds) {
+      if (otherClassId !== classId) {
+        const otherClassRef = db.collection('classes').doc(otherClassId).collection(type).doc(userId);
+
+        updatePromises.push(
+          otherClassRef.update({
+            classIds: admin.firestore.FieldValue.arrayRemove(classId)
+          })
+        );
+      }
+    }
+
+    // Wait for all classIds list updates to finish before removing the student/teacher from the specified class
+    await Promise.all(updatePromises);
+
+    // Delete the student/teacher from the specified class
+    await userRef.delete();
+
+    res.status(200).json({ message: `${type.slice(0, -1)} removed from class ${classId} and classIds updated in other classes` });
+  } 
+  catch (error) {
+    console.error('Error removing user from class:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Delete a specific class (does not delete the class members from other classes they are in though)
+app.delete('/delete-class/:classId', async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Retrieve all students and teachers in the class to be deleted
+    const studentsSnapshot = await db.collection('classes').doc(classId).collection('students').get();
+    const teachersSnapshot = await db.collection('classes').doc(classId).collection('teachers').get();
+
+    // Get the references for all student and teacher documents in the class
+    const studentRefs = studentsSnapshot.docs.map(doc => doc.ref);
+    const teacherRefs = teachersSnapshot.docs.map(doc => doc.ref);
+
+    // Create array of promises
+    // This will handle to handle removing the deleted classId from the classId lists of each user in other classes
+    const updatePromises = [];
+
+    for (const userRef of [...studentRefs, ...teacherRefs]) {
+      // Retrieve the student/teacher data to access their classId list
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+
+      if (userData && userData.classIds) {
+        // Get a list of the other classes the student/teacher is in (excluding the class to be deleted)
+        const otherClasses = userData.classIds.filter(id => id !== classId);
+        
+        for (const otherClassId of otherClasses) {
+          const type = userRef.path.includes('students') ? 'students' : 'teachers';
+          const otherClassRef = db.collection('classes').doc(otherClassId).collection(type).doc(userRef.id);
+
+          // Remove the deleted classId from the student or teacher's classId list in the other class
+          updatePromises.push(
+            otherClassRef.update({
+              classIds: admin.firestore.FieldValue.arrayRemove(classId)
+            })
+          );
+        }
+      }
+    }
+
+    // Wait for all classId lists of the student/teacher objects in other classes to be updated
+    await Promise.all(updatePromises);
+
+    // Delete all students and teachers in the specified class to be deleted
+    const deletionPromises = [...studentRefs.map(ref => ref.delete()), ...teacherRefs.map(ref => ref.delete())];
+    await Promise.all(deletionPromises);
+
+    // Delete the class document itself
+    await db.collection('classes').doc(classId).delete();
+
+    res.status(200).json({ message: 'Class and all associated students and teachers deleted successfully' });
+  } 
+  catch (error) {
+    console.error('Error deleting class:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // Delete student or teacher from all the classes they are in (give one of the user's classIds in url)
 app.delete('/delete-user/:classId/:type/:userId', async (req, res) => {
   try {
@@ -281,33 +390,6 @@ app.delete('/delete-user/:classId/:type/:userId', async (req, res) => {
   } 
   catch (error) {
     console.error('Error deleting user from all classes:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-// Delete a specific class (does not delete the class members from other classes they are in though)
-app.delete('/delete-class/:classId', async (req, res) => {
-  try {
-    const { classId } = req.params;
-
-    // Delete all students in the class
-    const studentsSnapshot = await db.collection('classes').doc(classId).collection('students').get();
-    const studentDeletions = studentsSnapshot.docs.map(doc => doc.ref.delete());
-    
-    // Delete all teachers in the class
-    const teachersSnapshot = await db.collection('classes').doc(classId).collection('teachers').get();
-    const teacherDeletions = teachersSnapshot.docs.map(doc => doc.ref.delete());
-
-    // Don't move on until all students and teachers have been deleted from the class
-    await Promise.all([...studentDeletions, ...teacherDeletions]);
-
-    // Delete the class document itself
-    await db.collection('classes').doc(classId).delete();
-
-    res.status(200).json({ message: 'Class and all associated students and teachers deleted successfully' });
-  } 
-  catch (error) {
-    console.error('Error deleting class:', error);
     res.status(500).send('Internal Server Error');
   }
 });

@@ -1,0 +1,273 @@
+Notes For Using Math Magicians Backend
+
+
+
+Database Structure:
+            Classes
+     Students     Teachers
+
+The database is set up so that students and teachers are stored in the specific class collection(s) they are a part of.
+Each class has a unique id, each student has a unique id, and each teacher has a unique id.
+If a student or teacher is in two separate classes, their data will be present in both of these class collections.
+Each student/teacher has a classIds attribute, which is an array of the ids of the classes they are a part of.
+
+
+
+Running the Server:
+Navigate to the "Backend" directory and type "npm start" in the command line.
+The server will be ran on port 3500 (http://localhost:3500) unless otherwise specified.
+
+
+
+Routes and How to Use Them:
+
+1. Get all students and teachers within a specified class (GET Method, no request object needed):
+http://localhost:3500/get-class-members/:classId
+
+Example request to get all students and teachers within a class with classID "5thgrademath":
+http://localhost:3500/get-class-members/5thgrademath
+
+Each student and teacher object within that class will be returned. 
+Additionally, id and type attributes will be added to each student/teacher returned object on top of their base data.
+
+Example (id, type, classIds are extra attributes not specified in the body of a post request):
+Request: http://localhost:3500/get-class-members/5thgrademath
+Response: 
+[
+  {
+    "id": "123456",
+    "type": "student",
+    "name": "Jack",
+    "level": 2,
+    "classIds": [
+      "5thgrademath"
+    ]
+  },
+  {
+    "id": "333444",
+    "type": "student",
+    "name": "Alex",
+    "level": 6,
+    "classIds": [
+      "5thgrademath"
+    ]
+  },
+  {
+    "id": "999999",
+    "type": "teacher",
+    "name": "Mr. Jones",
+    "classIds": [
+      "5thgrademath"
+    ]
+  }
+]
+
+
+
+2. Get all students or teachers within a specified class (GET Method, no request object needed):
+http://localhost:3500/get-class-members/:classId/:type
+
+Example request to get all students within a class with classID "5thgrademath":
+http://localhost:3500/get-class-members/5thgrademath/students
+
+Example request to get all teachers within a class with classID "5thgrademath":
+http://localhost:3500/get-class-members/5thgrademath/teachers
+
+Each student or teacher object (depends on specified type) within that class will be returned.
+Additionally, an id attribute will be added to each student or teacher's returned object on top of their base data.
+
+Example (id and classIds are extra attributes not specified in the body of a post request):
+Request: http://localhost:3500/get-class-members/5thgrademath/students
+Response:
+[
+  {
+    "id": "123456",
+    "name": "Jack",
+    "level": 2,
+    "classIds": [
+      "5thgrademath"
+    ]
+  },
+  {
+    "id": "333444",
+    "name": "Alex",
+    "level": 6,
+    "classIds": [
+      "5thgrademath"
+    ]
+  }
+]
+
+
+
+3. Get a specific student or teacher's profile data (GET Method, no request object needed):
+http://localhost:3500/get-user-info/:classId/:type/:userID
+
+Example request to get the profile of a student with id 123456 within a class with classId "5thgrademath":
+http://localhost:3500/get-user-info/5thgrademath/students/123456
+
+Example request to get the profile of a teacher with id 556677 within a class with classId "5thgrademath":
+http://localhost:3500/get-user-info/5thgrademath/teachers/556677
+
+The specific student or teacher object will be returned (just 1 object).
+Additionally, an id attribute will be added to each student or teacher's returned object on top of their base data.
+
+The classId in the url can be any class the student or teacher is in.
+This is because students and teachers are stored within each class collection that they are a part of.
+
+Example (id and classIds are extra attributes not specified in the body of a post request):
+Request: http://localhost:3500/get-user-info/5thgrademath/students/123456
+Response:
+{
+  "id": "123456",
+  "name": "Jack",
+  "level": 2,
+  "classIds": [
+    "5thgrademath"
+  ]
+}
+
+
+
+4. Create a new student or teacher and add them to a specified class (POST Method, request object needed):
+http://localhost:3500/create-new-user/:classId/:type/:userId
+
+Example request to create a new student with id 654321 and add them to the class with classId "4thgrademath":
+http://localhost:3500/create-new-user/4thgrademath/students/654321
+
+Example request to create a new teacher with id 123789 and add them to the class with classId "4thgrademath":
+http://localhost:3500/create-new-user/4thgrademath/teachers/123789
+
+In the body of the request, make sure to send all the relevant data you want to be stored with that user in the database.
+This data can be overridden/updated at any time with a put request (route 5).
+
+IMPORTANT: Only use this route when creating a new student/teacher, not adding a student/teacher to another class.
+
+IMPORTANT: Do not include classId, id, type, or classIds list as attributes in the request object (reason is discussed in route 5).
+	   These are determined in the url and do not need to be actual attributes in the object.
+
+The classId specified in the url can be a class that doesn't yet exist. It will be created if it doesn't already exist.
+
+Example (notice how classId, id, type, and classIds are not in the request body):
+Request url: http://localhost:3500/create-new-user/5thgrademath/students/123456
+Request Body:
+{
+  "name": "Jack",
+  "level": 2
+}
+
+
+
+5. Update the data of an already existing student or teacher (PUT Method, request object needed):
+http://localhost:3500/update-user/:classId/:type/:userId
+
+Example request to update the data of a student with id 123456 within a class with classId "5thgrademath":
+http://localhost:3500/update-user/5thgrademath/students/123456
+
+Example request to update the data of a teacher with id 123789 within a class with classId "4thgrademath":
+http://localhost:3500/update-user/4thgrademath/teachers/123789
+
+In the body of the request, make sure to send all the relevant data you want to be stored with that user in the database.
+Everything that was previously stored will be overridden by the body of this request.
+So, if you want to update a specific attribute, send the whole object back with that specific attribute's value changed.
+However, never send back the classIds list attribute (discussed below).
+
+IMPORTANT: The classIds attribute will not be changed due to this type of put request. So, do not send back the classIds attribute in
+	   the request object. The old classIds array will be copied over to the updated data object.
+
+IMPORTANT: Never send back the id or type attributes of the student/teacher either. These will be sent to the frontend in responses, but 
+	   do not send them back to the backend because their id and type are specified in the url.
+
+IMPORTANT: Only use this route when updating the data attributes of a student/teacher (name, level...), not adding them to another class.
+
+The class specified in the url can be any class that the student or teacher is within.
+The data of the specified student/teacher will be updated for each of that student/teacher's data objects in the other classes they are in.
+
+Example (notice how classId, id, type, and classIds are not in the request body):
+Request url: http://localhost:3500/update-user/5thgrademath/students/123456
+Request Body:
+{
+  "name": "Jack V2",
+  "level": 3
+}
+
+
+
+6. Add a student or teacher to another class (PUT Method, no request object needed):
+http://localhost:3500/add-to-class/:newClassId/:existingClassId/:type/:userId
+
+Example request to add a student with id 123456 to a class with classId "5thgrademath", the student is already in a class with classId "4thgrademath":
+http://localhost:3500/add-to-class/5thgrademath/4thgrademath/students/123456
+
+Example request to add a teacher with id 123789 to a class with classId "1stgrademath", the teacher is already in a class with classId "2ndgrademath":
+http://localhost:3500/add-to-class/1stgrademath/2ndgrademath/teachers/123789
+
+There is no request object needed for this route, all needed information is specified in the url.
+The classIds list of the specified student/teacher will be updated for each of that student/teacher's data objects in the other classes they are in.
+The existingClassId url parameter can be any class that the student or teacher is already in.
+The newClassId can be a class that doesn't yet exist. It will be created if it doesn't already exist, and the specified student/teacher will be added to it.
+
+
+
+7. Remove a student or teacher from a specific class (PUT Method, no request object needed):
+http://localhost:3500/remove-from-class/:classId/:type/:userId
+
+Example request to remove a student with id 123456 from the class with classId "5thgrademath":
+http://localhost:3500/remove-from-class/5thgrademath/students/123456
+
+Example request to remove a teacher with id 999999 from the class with classId "6thgrademath":
+http://localhost:3500/remove-from-class/6thgrademath/teachers/999999
+
+There is no request object needed for this route, all needed information is specified in the url.
+The student/teacher will only be removed from the specified class. They will still remain in the other classes they are within.
+The classIds list of the specified student/teacher will be updated for each of that student/teacher's data objects in the other classes they are in.
+If the specified student/teacher is the last member in the specified class, the class collection itself will be deleted too.
+
+
+
+8. Delete a class (DELETE Method, no request object needed):
+http://localhost:3500/delete-class/:classId
+
+Example request to delete a class with classId "5thgrademath". All student and teacher objects within that class will also be deleted.
+http://localhost:3500/delete-class/5thgrademath
+
+The students and teachers within the deleted class will still remain in the other classes they are a part of.
+The classIds list for each of the students and teachers within the deleted class will be updated in the other classes they are within.
+There is no request object needed for this route, all needed information is specified in the url.
+
+IMPORTANT: If a student or teacher is only in one class and that class gets deleted, the student/teacher will be deleted too.
+
+
+
+9. Delete a student or teacher from all classes they are within (DELETE Method, no request object needed):
+http://localhost:3500/delete-user/:classId/:type/:userId
+
+Example request to delete a student with id 123456 that is within a class with classId "5thgrademath". The student could also be in other classes.
+http://localhost:3500/delete-user/5thgrademath/students/123456
+
+The specified student/teacher will be deleted from each class they are a part of.
+The class specified in the url can be any class that the student or teacher is within.
+There is no request object needed for this route, all needed information is specified in the url.
+
+
+
+
+Summary for What to Include in Request Objects:
+
+Attributes to Never Send in a Request Body (the JSON object):
+1. classId - this is specified in the url, no need to add an attribute to the request object
+2. id of a student or teacher (userId or id) - this will be sent back to the frontend in responses, but do not include them in request objects (only include in url)
+3. type of a student or teacher (type) - this will also be sent to the frontend in responses but shouldn't be sent back, url also specifies type
+4. classIds attribute - the list of classIds is managed completely by the backend, never send a classIds attribute in a request, only include a classId in a url
+
+Attributes to Send in a Request Body (the JSON object):
+- Any attributes you want to be associated with a student or teacher (name, level, time spent on a level, leaderboard placing...)
+- Just do not include classId, id, type, or classIds as attributes in any request object body
+
+
+
+Helpful Tip:
+For many route urls, a classId of a class a student/teacher is already within is needed. Keep in mind, when you request a student/teacher object and get it in
+the frontend, you have access to the id of that student/teacher, the type of the user (student or teacher), and the list of classIds the user is associated with.
+Even though these attributes are not stored directly in the data fields of a student/teacher entry, they are sent in response objects to the frontend. So, if you
+need a classId to include in the url of a request, you can just use the first entry in the classIds array.
