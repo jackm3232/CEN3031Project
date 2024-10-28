@@ -7,12 +7,12 @@
 
 //------------------------------------------------------------------------------
 import {useEffect, useContext, useState} from "react";
-import {AuthContext} from "./AuthProv";
+import AuthProv, {AuthContext} from "./AuthProv";
 import {updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
 const CreateAccount = () => {
-  const { createUser, user, loading} = useContext(AuthContext);
+  const { createUser, user, loading} = AuthProv;
   const navigate = useNavigate();
 
   
@@ -57,34 +57,34 @@ const CreateAccount = () => {
               <form onSubmit={handleFormSubmit}>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Name</span>
+                    <span className="label-text">Name: </span>
                   </label>
                   <input
                     type="text"
                     name="name"
-                    placeholder="Name"
+                    placeholder="John Doe"
                     className="input input-bordered"
                   />
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Email</span>
+                    <span className="label-text">Email: </span>
                   </label>
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder="myinbox@mailprovider.com"
                     className="input input-bordered"
                   />
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Password</span>
+                    <span className="label-text">Password: </span>
                   </label>
                   <input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder="Your Password"
                     className="input input-bordered"
                   />
                 </div>
