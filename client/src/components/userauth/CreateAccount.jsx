@@ -6,7 +6,7 @@
 // Notes:
 
 //------------------------------------------------------------------------------
-import {useContext, useState} from "react";
+import {useEffect, useContext, useState} from "react";
 import {AuthContext} from "./AuthProv";
 import {updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
@@ -22,10 +22,11 @@ const CreateAccount = () => {
     );
   }
 
-
-  if (user) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  },[user, navigate]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

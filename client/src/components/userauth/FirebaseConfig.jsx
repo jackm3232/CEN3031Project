@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA4Ll1TbfZGRYdRGeSKIYREqNSjDKplIPo",
-  authDomain: "math-magicians-93bf6.firebaseapp.com",
-  projectId: "math-magicians-93bf6",
-  storageBucket: "math-magicians-93bf6.appspot.com",
-  messagingSenderId: "826664030826",
-  appId: "1:826664030826:web:ea1b2d72372f1e6e2c7013",
+  apiKey: "AIzaSyC1laSN2smcmLLPM6HpLk03daHuL3z28xA",
+  authDomain: "math-magicians.firebaseapp.com",
+  projectId: "math-magicians",
+  storageBucket: "math-magicians.appspot.com",
+  messagingSenderId: "401594687086",
+  appId: "1:401594687086:web:60a9e334412973138dd07f",
 };
 
 // Initialize Firebase
