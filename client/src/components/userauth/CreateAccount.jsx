@@ -12,7 +12,7 @@ import {updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
 const CreateAccount = () => {
-  const { createUser, user, loading} = AuthProv;
+  const { user, loading} = AuthProv;
   const navigate = useNavigate();
 
   
@@ -33,7 +33,9 @@ const CreateAccount = () => {
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
-    createUser(email, password)
+    const classID = e.target.classID.value;
+    const isInstructor = e.target.isInstructor.value;
+    createUser(email, password, classID, isInstructor)
       .then((result) => {
         updateProfile(result.user, {
           displayName: name,
@@ -88,8 +90,36 @@ const CreateAccount = () => {
                     className="input input-bordered"
                   />
                 </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Class ID: </span>
+                  </label>
+                  <input
+                    type="classID"
+                    name="classID"
+                    placeholder="Your Class ID, e.g. niebauer1"
+                    className="input input-bordered"
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Are you an instructor? </span>
+                  </label>
+                  <input 
+                    type="hidden"
+                    name="isInstructor"
+                    value="false"
+                    className="input input-bordered"
+                  />
+                  <input
+                    type="checkbox"
+                    name="isInstructor"
+                    value="true"
+                    className="input input-bordered"
+                  />
+                </div>
                 <div className="form-control mt-6">
-                  <button className="btn btn-primary">Sign Up</button>
+                  <button className="btn btn-primary">Create My Account</button>
                 </div>
               </form>
             </div>
