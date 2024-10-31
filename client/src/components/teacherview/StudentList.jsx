@@ -51,7 +51,7 @@ export default function StudentList() {
     // [note]: useEffect is used for external stuff like fetching
     useEffect(() => {
         async function getStudents() {
-            const response = await fetch(`http://localhost:3500/`);
+            const response = await fetch(`http://localhost:3500/get-class-members/4thgrademath`, {classID: "4thgrademath"});
 
             if (!response.ok) {
                 const message = `An error occurred: ${response.statusText}`;
