@@ -8,11 +8,58 @@
 //------------------------------------------------------------------------------
 import {useEffect, useContext, useState} from "react";
 import AuthProv, {AuthContext} from "./AuthProv";
-import {updateProfile} from "firebase/auth";
+import auth from "./FirebaseConfig";
+import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
+function createUser(name, email, password, classID, isInstructor) { // I just don't know how to use this function. Originally this was a const but that didn't
+  return createUserWithEmailAndPassword(auth, email, password)       // work in this instance.
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log('User created:', user);
+      auth.currentUser.getIdToken(/* forceRefresh */ true)
+      .then((idToken) => {
+        console.log('ID Token:', idToken);
+        let role;
+      if (isInstructor == true) {
+        role = 'teachers';
+      }
+      else {
+        role = 'students';
+      }
+      let first = 'http://localhost:3500/create-new-user/';
+      let link = first.concat (classID, '/', role, '/', user.uid);
+      fetch(link, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ classIDs: {classID},
+                               level: 0,
+                               name: name
+         })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      })
+      .catch((error) => {
+        console.error('Error creating user:', error.message);
+      });
+    })
+    .catch((error) => {
+      console.error('Error creating user:', error.message);
+      window.alert(error.message);
+    });
+}
+
 const CreateAccount = () => {
-  const { user, loading} = AuthProv;
+  const {user, loading} = AuthProv;
   const navigate = useNavigate();
 
   
@@ -34,14 +81,11 @@ const CreateAccount = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const classID = e.target.classID.value;
-    const isInstructor = e.target.isInstructor.value;
-    createUser(email, password, classID, isInstructor)
-      .then((result) => {
-        updateProfile(result.user, {
-          displayName: name,
-        });
+    const isInstructor = e.target.isInstructor.checked;
+    createUser(name, email, password, classID, isInstructor)
+      .then(() => {
+        window.alert("Account created succesfully");
         navigate("/");
-        console.log(result);
       })
       .catch((error) => {
         console.log(error);
@@ -49,6 +93,7 @@ const CreateAccount = () => {
     e.target.reset();
   };
 
+  
 
   return (
     <div>
@@ -105,16 +150,9 @@ const CreateAccount = () => {
                   <label className="label">
                     <span className="label-text">Are you an instructor? </span>
                   </label>
-                  <input 
-                    type="hidden"
-                    name="isInstructor"
-                    value="false"
-                    className="input input-bordered"
-                  />
                   <input
                     type="checkbox"
                     name="isInstructor"
-                    value="true"
                     className="input input-bordered"
                   />
                 </div>
