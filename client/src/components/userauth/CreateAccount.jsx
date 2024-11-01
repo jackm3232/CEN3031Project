@@ -12,8 +12,8 @@ import auth from "./FirebaseConfig";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
-function createUser(name, email, password, classID, isInstructor) { // I just don't know how to use this function. Originally this was a const but that didn't
-  return createUserWithEmailAndPassword(auth, email, password)       // work in this instance.
+function createUser(name, email, password, classID, isInstructor) { 
+  return createUserWithEmailAndPassword(auth, email, password)      
     .then((userCredential) => {
       const user = userCredential.user;
       console.log('User created:', user);
@@ -35,9 +35,9 @@ function createUser(name, email, password, classID, isInstructor) { // I just do
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${idToken}`
         },
-        body: JSON.stringify({ classIDs: {classID},
-                               level: 0,
-                               name: name
+        body: JSON.stringify({
+            name: name,
+            level: 0
          })
         })
         .then(response => response.json())
@@ -55,7 +55,8 @@ function createUser(name, email, password, classID, isInstructor) { // I just do
     .catch((error) => {
       console.error('Error creating user:', error.message);
       window.alert(error.message);
-    });
+      throw error; // Skip .then that comes after this function is executed
+    })
 }
 
 const CreateAccount = () => {
@@ -82,15 +83,22 @@ const CreateAccount = () => {
     const password = e.target.password.value;
     const classID = e.target.classID.value;
     const isInstructor = e.target.isInstructor.checked;
-    createUser(name, email, password, classID, isInstructor)
+    if (name == "") {
+      window.alert("Could not create your account, you need to include your name!");
+    }
+    else if (classID == "") {
+      window.alert("Could not create your account, you need to include a class ID!");
+    }
+    else {
+      createUser(name, email, password, classID, isInstructor)
       .then(() => {
-        window.alert("Account created succesfully");
+        window.alert("Account created succesfully!");
         navigate("/");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((error) => { // Catches error thrown within createUser function to skip navigate("/")
+        
       });
-    e.target.reset();
+    }
   };
 
   
@@ -111,6 +119,7 @@ const CreateAccount = () => {
                     name="name"
                     placeholder="John Doe"
                     className="input input-bordered"
+                    size="25"
                   />
                 </div>
                 <div className="form-control">
@@ -122,6 +131,7 @@ const CreateAccount = () => {
                     name="email"
                     placeholder="myinbox@mailprovider.com"
                     className="input input-bordered"
+                    size="25"
                   />
                 </div>
                 <div className="form-control">
@@ -133,6 +143,7 @@ const CreateAccount = () => {
                     name="password"
                     placeholder="Your Password"
                     className="input input-bordered"
+                    size="25"
                   />
                 </div>
                 <div className="form-control">
@@ -144,6 +155,7 @@ const CreateAccount = () => {
                     name="classID"
                     placeholder="Your Class ID, e.g. niebauer1"
                     className="input input-bordered"
+                    size="25"
                   />
                 </div>
                 <div className="form-control">
