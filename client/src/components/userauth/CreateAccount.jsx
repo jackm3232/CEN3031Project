@@ -36,8 +36,8 @@ function createUser(name, email, password, classID, isInstructor) {
           'Authorization': `Bearer ${idToken}`
         },
         body: JSON.stringify({
-            name: name,
-            level: 0
+            "name": name,
+            "level": 0
          })
         })
         .then(response => response.json())
