@@ -4,6 +4,7 @@ import App from "./App";
 // import {auth} from "./components/userauth/FirebaseConfig";
 // import {AuthContext} from "./components/userauth/AuthProv";
 import CreateAccount from "./components/userauth/CreateAccount.jsx";
+import Login from "./components/userauth/Login.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/create-account",
         element: <CreateAccount />,
+       },
+       {
+        path: "/login",
+        element: <Login />,
        },
     ],
   },

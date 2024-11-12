@@ -12,7 +12,7 @@ import auth from "./FirebaseConfig";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
-function createUser(name, email, password, classID, isInstructor) { 
+function createUser(name, email, password, classID, isInstructor, level) { 
   return createUserWithEmailAndPassword(auth, email, password)      
     .then((userCredential) => {
       const user = userCredential.user;
@@ -37,7 +37,7 @@ function createUser(name, email, password, classID, isInstructor) {
         },
         body: JSON.stringify({
             "name": name,
-            "level": 0
+            "level": level
          })
         })
         .then(response => response.json())
@@ -83,6 +83,7 @@ const CreateAccount = () => {
     const password = e.target.password.value;
     const classID = e.target.classID.value;
     const isInstructor = e.target.isInstructor.checked;
+    const level = e.target.level.value;
     if (name == "") {
       window.alert("Could not create your account, you need to include your name!");
     }
@@ -90,7 +91,8 @@ const CreateAccount = () => {
       window.alert("Could not create your account, you need to include a class ID!");
     }
     else {
-      createUser(name, email, password, classID, isInstructor)
+      const level_num = Number(level);
+      createUser(name, email, password, classID, isInstructor, level_num)
       .then(() => {
         window.alert("Account created succesfully!");
         navigate("/");
@@ -142,6 +144,21 @@ const CreateAccount = () => {
                     type="password"
                     name="password"
                     placeholder="Your Password"
+                    className="input input-bordered"
+                    size="25"
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Grade: </span>
+                  </label>
+                  <input
+                    type="number"
+                    name="level"
+                    min="0"
+                    max="5"
+                    required
+                    placeholder="e.g. 0 (Kindergarten), 1 (1st grade)"
                     className="input input-bordered"
                     size="25"
                   />
