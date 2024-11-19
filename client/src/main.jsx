@@ -1,10 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
+import App from "./App";
+// import {auth} from "./components/userauth/FirebaseConfig";
+// import {AuthContext} from "./components/userauth/AuthProv";
+import CreateAccount from "./components/userauth/CreateAccount.jsx";
+import Login from "./components/userauth/Login.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import App from "./App";
 import Record from "./components/Record";
 import RecordList from "./components/RecordList";
 import "./index.css";
@@ -57,26 +61,14 @@ const router = createBrowserRouter([
         element: <RecordList />,
         element: <StudentList />,
       },
-    ],
-  },
-  {
-    path: "/edit/:id",
-    element: <App />,
-    children: [
       {
-        path: "/edit/:id",
-        element: <Record />,
-      },
-    ],
-  },
-  {
-    path: "/create",
-    element: <App />,
-    children: [
-      {
-        path: "/create",
-        element: <Record />,
-      },
+        path: "/create-account",
+        element: <CreateAccount />,
+       },
+       {
+        path: "/login",
+        element: <Login />,
+       },
     ],
   },
 ]);
