@@ -5,6 +5,7 @@ import App from "./App";
 // import {AuthContext} from "./components/userauth/AuthProv";
 import CreateAccount from "./components/userauth/CreateAccount.jsx";
 import Login from "./components/userauth/Login.jsx";
+import AuthRoute from "./components/userauth/AuthRoute.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -15,6 +16,13 @@ import Profile from "./components/userauth/Profile.jsx";
 import "./index.css";
 import StudentList from "./components/teacherview/StudentList";
 import QuestionView from "./components/teacherview/QuestionView";
+
+const AuthRoute = ({ user, children }) => {
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 const router = createBrowserRouter([
   {
@@ -70,7 +78,7 @@ const router = createBrowserRouter([
        // profile page
        {
         path: "/profile",
-        element: <Profile />,
+        element: (<AuthRoute> <Profile /> </AuthRoute>),
        },
     ],
   },
