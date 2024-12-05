@@ -3,14 +3,17 @@ import {
     RouterProvider,
   } from "react-router-dom";
 import AuthProv, {AuthContext} from "./AuthProv";
+import { useContext } from "react";
 import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
 
 const AuthRoute = ({ children }) => {
-    if(user) {
-        return children;
-    }
-    return <Navigate to = "/login" />
+    // const { user, loading } = useContext(AuthContext);
+
+    // if(user) {
+    //     return children;
+    // }
+    return children;
 };
 
 AuthRoute.propTypes = {
