@@ -157,6 +157,7 @@ const CreateAccount = () => {
                     name="level"
                     min="0"
                     max="5"
+                    step="0.1"
                     required
                     placeholder="e.g. 0 (Kindergarten), 1 (1st grade)"
                     className="input input-bordered"
