@@ -17,12 +17,12 @@ import "./index.css";
 import StudentList from "./components/teacherview/StudentList";
 import QuestionView from "./components/teacherview/QuestionView";
 
-const AuthRoute = ({ user, children }) => {
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-  return children;
-};
+// const AuthRoute = ({ user, children }) => {
+//   if (!user) {
+//     return <Navigate to="/" replace />;
+//   }
+//   return children;
+// };
 
 const router = createBrowserRouter([
   {

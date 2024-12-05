@@ -13,7 +13,6 @@ const Profile = () => {
     const userInfo = {
         name: "John Doe",
         email: "john.doe@example.com",
-        // Add other user info as needed
     };
 
     return (
@@ -21,7 +20,7 @@ const Profile = () => {
             <h1>User Profile</h1>
             <p>Name: {userInfo.name}</p>
             <p>Email: {userInfo.email}</p>
-            {/* Display other user information as needed */}
+           
         </div>
     );
 };
