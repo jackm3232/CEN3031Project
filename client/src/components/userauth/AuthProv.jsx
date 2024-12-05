@@ -7,15 +7,16 @@ import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import auth from "./FirebaseConfig";
 
+//export let AuthContext = createContext(null);
+
 export const AuthContext = createContext(null);
 
 const AuthProv = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  
-
   const loginUser = (email, password) => {
+    //AuthContext = createContext(auth);
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -27,6 +28,7 @@ const AuthProv = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      //AuthContext = createContext(auth);
       setUser(currentUser);
       setLoading(false);
     });

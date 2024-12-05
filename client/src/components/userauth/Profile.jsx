@@ -6,13 +6,17 @@
 // Notes:
 // components/userauth/Profile.jsx
 
+//import { userInfo } from 'os';
 import React from 'react';
+//import user from './AuthProv';
 
-const Profile = () => {
+//const auth = getAuth();
+
+const Profile = (user) => {
     // static data
     const userInfo = {
-        name: "John Doe",
-        email: "john.doe@example.com",
+      name: user.name,
+      email: user.email
     };
 
     return (

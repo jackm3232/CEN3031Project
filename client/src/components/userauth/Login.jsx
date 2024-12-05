@@ -22,7 +22,8 @@ function userLogin(email, password) {
 }
 
 const Login = () => {
-  const {user, loading} = AuthProv;
+  //const {user, loading} = AuthProv;
+  const { user, loginUser, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   
@@ -36,7 +37,7 @@ const Login = () => {
     if (user) {
       navigate("/");
     }
-  },[user, navigate]);
+  }, [user, navigate]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -49,14 +50,22 @@ const Login = () => {
     //   window.alert("Could not create your account, you need to include a password!");
     // }
     // else {
+
+    AuthProv.loginUser(email, password).then(() => {
+      window.alert("Logged in"); 
+      navigate("/");
+    });
+    
       userLogin(email, password)
       .then(() => {
+        //loginUser(email, password);
         window.alert("You're logged in!");
         navigate("/");
       })
       .catch((error) => { // Catches error thrown within signIn function to skip navigate("/")
         
       });
+    
     // }
   };
 
