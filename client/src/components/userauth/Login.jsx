@@ -23,6 +23,7 @@ function userLogin(email, password) {
 
 const Login = () => {
   const {user, loading} = AuthProv;
+  console.log(user);
   const navigate = useNavigate();
 
   
@@ -42,21 +43,14 @@ const Login = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    // if (email == "") {
-    //   window.alert("Could not sign in, you need to include your email!");
-    // }
-    // else if (password == "") {
-    //   window.alert("Could not create your account, you need to include a password!");
-    // }
-    // else {
-      userLogin(email, password)
-      .then(() => {
-        window.alert("You're logged in!");
-        navigate("/");
-      })
-      .catch((error) => { // Catches error thrown within signIn function to skip navigate("/")
-        
-      });
+
+    userLogin(email, password)
+    .then(() => {
+      window.alert("You're logged in!");
+      navigate("/");
+    })
+    .catch((error) => { 
+    });
     // }
   };
 
