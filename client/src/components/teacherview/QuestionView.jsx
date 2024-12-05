@@ -32,11 +32,13 @@ function checkAnswer(ans, e) {
   const formJson = Object.fromEntries(formData.entries());
 
   if (formJson.guess == ans) {
+    alert("Correct!");
     console.log("Correct!");
     return true;
   }
 
   console.log("Not Correct!");
+  alert("Not Correct!");
   return false;  
 }
 
@@ -58,7 +60,7 @@ const Question = (props) => (
           =
     </span>
     <span className="text-md font-small text-black text-justify">
-      {props.question.answer}
+      ?
     </span>
 
     <form onSubmit={(e) => checkAnswer(props.question.answer, e)}>
@@ -73,6 +75,7 @@ const Question = (props) => (
 // Question react component
 export default function QuestionView() {  
   const [questions, setQuestions] = useState([]);
+  //const [type] = useState("add");
 
   // requests a question from math "api"
   async function requestQuestion() {
@@ -95,6 +98,7 @@ export default function QuestionView() {
 
   function createQuestions() {
     return questions.map((question) => {
+      console.log(question.answer);
       return (
         <Question
           question={question}
