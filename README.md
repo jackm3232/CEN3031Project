@@ -11,6 +11,7 @@ https://docs.google.com/presentation/d/11p_RwD1gKSTSvcM8Owi2Red98Ue2ZJub-iiNk2W8
 
 To run the frontend:
 - cd to the client dir within a terminal
+- Add .env file with userauth credentials to client dir
 - run the command: npm i
 - run the command: npm run dev
 - In a new chrome tab, type: localhost:<whatever the npm run dev command printed here> (without the <>) and it will load the UI.
@@ -18,6 +19,7 @@ To run the frontend:
 
 To run the backend:
 - cd to the Backend dir within a terminal
+- Add .env file with database credentials to Backend dir
 - run the command: npm i
 - run the command: npm start
 - The server will automatically update when you save a file in your IDE, you don't have to restart the server to see changes.
