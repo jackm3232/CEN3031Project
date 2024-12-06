@@ -2,13 +2,14 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC1laSN2smcmLLPM6HpLk03daHuL3z28xA",
-  authDomain: "math-magicians.firebaseapp.com",
-  projectId: "math-magicians",
-  storageBucket: "math-magicians.appspot.com",
-  messagingSenderId: "401594687086",
-  appId: "1:401594687086:web:60a9e334412973138dd07f",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

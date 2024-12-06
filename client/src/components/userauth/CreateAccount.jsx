@@ -72,7 +72,7 @@ const CreateAccount = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/list");
     }
   },[user, navigate]);
 
@@ -95,7 +95,7 @@ const CreateAccount = () => {
       createUser(name, email, password, classID, isInstructor, level_num)
       .then(() => {
         window.alert("Account created succesfully!");
-        navigate("/");
+        navigate("/list");
       })
       .catch((error) => { // Catches error thrown within createUser function to skip navigate("/")
         
@@ -107,14 +107,14 @@ const CreateAccount = () => {
 
   return (
     <div>
-      <div className="min-h-screen bg-base-200">
+      <div className="min-h-screen flex justify-center bg-base-200">
         <div className="hero-content flex-col">
-          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <div className="p-4 card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100  rounded-lg">
             <div className="card-body">
               <form onSubmit={handleFormSubmit}>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Name: </span>
+                    <span className="label-text font-bold">Name: </span>
                   </label>
                   <input
                     type="text"
@@ -126,7 +126,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Email: </span>
+                    <span className="label-tex font-bold">Email: </span>
                   </label>
                   <input
                     type="email"
@@ -138,7 +138,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Password: </span>
+                    <span className="label-text font-bold">Password: </span>
                   </label>
                   <input
                     type="password"
@@ -150,7 +150,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Grade: </span>
+                    <span className="label-text font-bold">Grade: </span>
                   </label>
                   <input
                     type="number"
@@ -165,7 +165,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Class ID: </span>
+                    <span className="label-text font-bold">Class ID: </span>
                   </label>
                   <input
                     type="classID"
@@ -177,7 +177,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Are you an instructor? </span>
+                    <span className="label-text font-bold">Are you an instructor? </span>
                   </label>
                   <input
                     type="checkbox"
@@ -185,8 +185,8 @@ const CreateAccount = () => {
                     className="input input-bordered"
                   />
                 </div>
-                <div className="form-control mt-6">
-                  <button className="btn btn-primary">Create My Account</button>
+                <div className="form-control mt-6 flex justify-center">
+                  <button className="p-1 bg-cyan-950 hover:bg-blue-300 text-white btn btn-primary rounded-lg">Create My Account</button>
                 </div>
               </form>
             </div>
